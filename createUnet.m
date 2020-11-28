@@ -6,7 +6,7 @@
 
 % Copyright 2017 The MathWorks, Inc.
 
-function lgraph = createUnet(inputTileSize)
+function lgraph = createUnet(inputTileSize, numOfClasses, pixelClassLayer)
 
 % Network parameters taken from the publication
 encoderDepth = 4;
@@ -152,17 +152,18 @@ for sections = 1:encoderDepth
     layerIndex = layerIndex + 7;
 end
 
-finalConv = convolution2dLayer(1,18,...
+finalConv = convolution2dLayer(1,numOfClasses,...
     'BiasL2Factor',0,...
     'Name','Final-ConvolutionLayer');
 
-finalConv.Weights = randn(1,1,decoderNumChannels,18);
-finalConv.Bias = randn(1,1,18)*0.00001 + 1;
+finalConv.Weights = randn(1,1,decoderNumChannels,numOfClasses);
+finalConv.Bias = randn(1,1,numOfClasses)*0.00001 + 1;
 
 smLayer = softmaxLayer('Name','Softmax-Layer');
 
-pixelClassLayer = pixelClassificationLayer('Name','Segmentation-Layer'); %, 'ClassNames', classesTbl.Name, 'ClassWeights', classWeights);
-
+if ~exist('pixelClassLayer', 'var')
+    pixelClassLayer = pixelClassificationLayer('Name','Segmentation-Layer'); %, 'ClassNames', classesTbl.Name, 'ClassWeights', classWeights);
+end
 layers = [layers; finalConv; smLayer; pixelClassLayer];
 
 % Create the layer graph and create connections in the graph

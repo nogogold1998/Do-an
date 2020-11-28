@@ -21,8 +21,9 @@ classdef imbalanceRandomPatchExtractionDatastore < randomPatchExtractionDatastor
                 [patchInput, patchResponse, patchLocation] = cropRandomPatchesFromImagePairs@randomPatchExtractionDatastore(this, img1, img2);
                 if numel(this.PatchSize) == 2
                     labelProbabilities = histcounts(patchResponse(:), 'Normalization', 'probability');
-                    m = min(labelProbabilities);
-                    if numel(labelProbabilities) > 1 && (labelProbabilities(1, 1) == m || m >= this.biasThreshold)
+%                     m = min(labelProbabilities);
+%                     if numel(labelProbabilities) > 1 && (labelProbabilities(1, 1) == m || m >= this.biasThreshold)
+                    if numel(labelProbabilities) > 1 && (max(labelProbabilities) - min(labelProbabilities)) < this.biasThreshold
                         return;
                     end
                 else 

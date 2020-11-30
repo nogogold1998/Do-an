@@ -9,14 +9,16 @@ function showImageWithLabel(table)
         for j = 1:n
             x = (i - 1) * n + j;
             if x <= h
-                image = normalize(table{x, 1}{1, 1}(:,:,2), 'range', [0 1]);
-                label = double(table{x,2}{1, 1});
-                c = labeloverlay(image,label,'ColorMap', [0.7 0.7 0.7; 0 0 1]);
+                bands = {table{x, 1}{1, 1}(:,:,1), table{x,1}{1,1}(:,:,2)};
+                bands = {normalize(bands{1}, 'range', [0 1]), normalize(bands{2}, 'range', [0 1])};
+                label = table{x,2}{1, 1};
+                c = labeloverlay(uint8(bands{2}*255),label,'ColorMap', [0.7 0.7 0.7; 0 0 1]);
             else
                 c = ones(imHeight, imWidth, 3) * 255;
-                image = c;
+                bands = {c, c};
             end
-            temp = cat(2,image.*ones(imHeight, imWidth, 3)*255, c, ones(imHeight, padding, 3)*255);
+            r = ones(imHeight, imWidth, 3)*255;
+            temp = cat(2,bands{1}.*r, bands{2}.*r, c, ones(imHeight, padding, 3)*255);
             pair{j} = cat(1, temp, ones(padding, width(temp), 3) * 255);
         end
         pairs{i} = cat(2,pair{:,:,:});

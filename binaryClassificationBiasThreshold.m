@@ -1,1 +1,0 @@
-function biasThreshold = binaryClassificationBiasThreshold(label)

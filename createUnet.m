@@ -9,7 +9,7 @@
 function lgraph = createUnet(inputTileSize, numOfClasses, pixelClassLayer)
 
 % Network parameters taken from the publication
-encoderDepth = 6;
+encoderDepth = 4;
 initialEncoderNumChannels = 64;
 inputNumchannels = inputTileSize(3);
 convFilterSize = 2;
@@ -59,9 +59,9 @@ for sections = 1:encoderDepth
     relu2 = reluLayer('Name',['Encoder-Section-' num2str(sections) '-ReLU-2']);
        
     layers = [layers; conv1;
-        groupNormalizationLayer(1,"Name",['Encoder-Section-' num2str(sections) '-GroupNormalization-1']);
+%         groupNormalizationLayer(1,"Name",['Encoder-Section-' num2str(sections) '-GroupNormalization-1']);
         relu1; conv2; 
-        groupNormalizationLayer(1,"Name",['Encoder-Section-' num2str(sections) '-GroupNormalization-2']);
+%         groupNormalizationLayer(1,"Name",['Encoder-Section-' num2str(sections) '-GroupNormalization-2']);
         relu2];     %#ok<*AGROW>
     layerIndex = layerIndex + 4;
     
@@ -100,7 +100,7 @@ conv2.Bias = zeros(1,1,2*encoderNumChannels)*0.00001 + 1;
 
 relu2 = reluLayer('Name','Mid-ReLU-2');
 layers = [layers; conv1;
-    groupNormalizationLayer(1,"Name",'Mid-GroupNormalization-1'); 
+%     groupNormalizationLayer(1,"Name",'Mid-GroupNormalization-1'); 
     relu1; conv2; relu2];
 layerIndex = layerIndex + 4;
 
@@ -154,9 +154,9 @@ for sections = 1:encoderDepth
     relu2 = reluLayer('Name',['Decoder-Section-' num2str(sections) '-ReLU-2']);
     
     layers = [layers; upConv; upReLU; depthConcatLayer; conv1;
-        groupNormalizationLayer(1,"Name",['Decoder-Section-' num2str(sections) '-GroupNormalization-1']);
+%         groupNormalizationLayer(1,"Name",['Decoder-Section-' num2str(sections) '-GroupNormalization-1']);
         relu1; conv2;
-        groupNormalizationLayer(1,"Name",['Decoder-Section-' num2str(sections) '-GroupNormalization-2']);
+%         groupNormalizationLayer(1,"Name",['Decoder-Section-' num2str(sections) '-GroupNormalization-2']);
         relu2];
     
     layerIndex = layerIndex + 7;

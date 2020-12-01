@@ -10,7 +10,7 @@ function showImageWithLabel(table)
             x = (i - 1) * n + j;
             if x <= h
                 bands = {table{x, 1}{1, 1}(:,:,1), table{x,1}{1,1}(:,:,2)};
-                bands = {normalize(bands{1}, 'range', [0 1]), normalize(bands{2}, 'range', [0 1])};
+                bands = {normalize(double(bands{1}), 'range', [0 1]), normalize(double(bands{2}), 'range', [0 1])};
                 label = table{x,2}{1, 1};
                 c = labeloverlay(uint8(bands{2}*255),label,'ColorMap', [0.7 0.7 0.7; 0 0 1]);
             else

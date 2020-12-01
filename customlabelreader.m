@@ -1,9 +1,7 @@
-function image = customlabelreader(imagePath, pixelClassificationThreshold, sigma)
-    i = imread(imagePath);
-    i1 = double(i);
-    i2 = imgaussfilt(i1, sigma);
+function out = customlabelreader(image, pixelClassificationThreshold, sigma)
+    i2 = imgaussfilt(image, sigma);
     i3 = i2;
     i3(i3 > pixelClassificationThreshold) = 1;
     i3(i3 <= pixelClassificationThreshold) = 0;
-    image = uint8(i3);
+    out = uint8(i3);
 end
